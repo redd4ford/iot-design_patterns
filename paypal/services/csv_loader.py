@@ -61,7 +61,11 @@ class CsvLoaderService:
             "Transaction": Transaction
         }.get(class_name)
 
+<<<<<<< HEAD
     def load(self, **query_params) -> None:
+=======
+    def load(self, **query_params):
+>>>>>>> 4a9adc26ef4109c51013b6b6036d2ce9e40bf138
         """
         Generate CSV, parse it, and populate the database with data from the file.
         """
@@ -83,7 +87,11 @@ class CsvLoaderService:
 
         self.populate(parsed_data)
 
+<<<<<<< HEAD
     def populate(self, parsed_data: dict) -> None:
+=======
+    def populate(self, parsed_data: dict):
+>>>>>>> 4a9adc26ef4109c51013b6b6036d2ce9e40bf138
         """
         Create entities and store them in the database.
         """
