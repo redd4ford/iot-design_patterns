@@ -3,6 +3,7 @@ from django.db import models
 
 from paypal.domain.account.constants import AccountConstants
 from paypal.domain.core.models import BaseUUIDModel
+from paypal.domain.core.util import EntityVerbose
 
 
 class PayPalAccount(BaseUUIDModel):
@@ -18,8 +19,8 @@ class PayPalAccount(BaseUUIDModel):
     REQUIRED_FIELDS = ['account_type', 'balance']
 
     class Meta:
-        verbose_name = 'PayPal Account'
-        verbose_name_plural = 'PayPal Accounts'
+        verbose_name = EntityVerbose.PAYPAL_ACCOUNT
+        verbose_name_plural = f'{EntityVerbose.PAYPAL_ACCOUNT}s'
 
     def __str__(self) -> str:
         return f'{self.id} | {self.account_type} {self.balance}'

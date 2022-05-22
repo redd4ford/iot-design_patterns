@@ -9,6 +9,7 @@ from django.db import models
 from paypal.domain.core.models import BaseUUIDModel
 from paypal.domain.account.models import PayPalAccount
 from paypal.domain.banking.models import BillingAddress
+from paypal.domain.core.util import EntityVerbose
 
 
 class Card(BaseUUIDModel):
@@ -43,8 +44,8 @@ class Card(BaseUUIDModel):
     ]
 
     class Meta:
-        verbose_name = 'Card'
-        verbose_name_plural = 'Cards'
+        verbose_name = EntityVerbose.CARD
+        verbose_name_plural = f'{EntityVerbose.CARD}s'
 
     def __str__(self) -> str:
         return (
@@ -53,5 +54,6 @@ class Card(BaseUUIDModel):
         )
 
     @property
-    def is_expired(self):
-        return self.expiration_date > datetime.now()
+    def is_expired(self) -> bool:
+        month, year = self.expiration_date.split()
+        return datetime.strptime(f'01/{month}/{year} 00:00:00', '%d/%m/%Y %H:%M:%S') > datetime.now()
