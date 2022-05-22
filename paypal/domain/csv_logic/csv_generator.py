@@ -172,4 +172,4 @@ class CsvGenerator:
 
 
 if __name__ == '__main__':
-    CsvGenerator.generate_csv()
+    CsvGenerator.generate_csv(f'../../../generated.csv')
