@@ -1,5 +1,6 @@
 import csv
 import uuid
+from typing import Union
 
 from paypal.domain.csv_logic.util import (
     paypal_account_headers,
@@ -14,7 +15,7 @@ class CsvReader:
     """ CSV file parser. """
 
     @classmethod
-    def _is_row_a_header(cls, row: list):
+    def _is_row_a_header(cls, row: list) -> bool:
         """
         Check if current row is a header.
         """
@@ -27,14 +28,14 @@ class CsvReader:
         ]
 
     @classmethod
-    def _is_row_blank(cls, row: list):
+    def _is_row_blank(cls, row: list) -> bool:
         """
-        Check if current row is blank
+        Check if current row is blank.
         """
         return row[0] == '"'
 
     @classmethod
-    def _map_header_to_entity_name(cls, header: list):
+    def _map_header_to_entity_name(cls, header: list) -> str:
         """
         Return entity verbose name based on headers.
         """
@@ -47,7 +48,7 @@ class CsvReader:
         }.get(tuple(header), None)
 
     @classmethod
-    def _convert_str_to_uuid(cls, value):
+    def _convert_str_to_uuid(cls, value: Union[str, int]) -> Union[str, uuid.UUID]:
         """
         Convert string UUIDs to UUID objects.
         """
@@ -62,9 +63,9 @@ class CsvReader:
         return value
 
     @classmethod
-    def _convert_row_to_dict(cls, header: list, row: list):
+    def _convert_row_to_dict(cls, header: list, row: list) -> dict:
         """
-        Convert row to a dict with column name and value.
+        Convert current row to a dict of column names and values.
         """
         return {
             header[j]: row[j]

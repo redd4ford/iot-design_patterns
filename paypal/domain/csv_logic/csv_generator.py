@@ -17,6 +17,9 @@ from paypal.domain.csv_logic.util import (
 class CsvGenerator:
     @classmethod
     def _generate_paypal_account_data(cls, new_id: uuid.UUID) -> list:
+        """
+        Generate values for an object of PayPalAccount and return them as a list.
+        """
         return [
             new_id,
             random.choice(["personal", "business"]),
@@ -25,6 +28,9 @@ class CsvGenerator:
 
     @classmethod
     def _get_unique_account_id(cls, account_ids: list, used_account_ids: set) -> uuid.UUID:
+        """
+        Find id of an account that does not have a linked AccountPersonalData object yet.
+        """
         is_free = False
         new_id = None
         while not is_free:
@@ -35,6 +41,9 @@ class CsvGenerator:
 
     @classmethod
     def _generate_account_personal_data(cls, new_id: uuid.UUID) -> list:
+        """
+        Generate values for an object of AccountPersonalData and return them as a list.
+        """
         return [
             new_id,
             Faker().name(),
@@ -48,6 +57,9 @@ class CsvGenerator:
 
     @classmethod
     def _generate_billing_address_data(cls, new_id: uuid.UUID, account_ids: list) -> list:
+        """
+        Generate values for an object of BillingAddress and return them as a list.
+        """
         return [
             new_id,
             random.choice(account_ids),
@@ -62,6 +74,9 @@ class CsvGenerator:
     def _generate_card_data(
             cls, new_id: uuid.UUID, account_ids: list, billing_address_ids: list
     ) -> list:
+        """
+        Generate values for an object of Card and return them as a list.
+        """
         return [
             new_id,
             random.choice(account_ids),
@@ -75,6 +90,9 @@ class CsvGenerator:
 
     @classmethod
     def _generate_transaction_data(cls, card_ids: list) -> list:
+        """
+        Generate values for an object of Transaction and return them as a list.
+        """
         return [
             uuid.uuid4(),
             random.choice(card_ids),
