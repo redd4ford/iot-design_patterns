@@ -28,8 +28,12 @@ class CsvLoaderAPIView(APIView):
 
     @extend_schema(
         parameters=[
-            OpenApiParameter("filename", OpenApiTypes.STR, OpenApiParameter.QUERY, required=False),
-            OpenApiParameter("rows_to_create", OpenApiTypes.INT, OpenApiParameter.QUERY, required=False),
+            OpenApiParameter(
+                "filename", OpenApiTypes.STR, OpenApiParameter.QUERY, required=False
+            ),
+            OpenApiParameter(
+                "rows_to_create", OpenApiTypes.INT, OpenApiParameter.QUERY, required=False
+            ),
         ],
         request=None,
         responses={
@@ -42,8 +46,8 @@ class CsvLoaderAPIView(APIView):
         Fills the database based on a generated CSV (also generates a CSV if it does not exist).
         ###
             Parameters:
-                :filename: (str, not required) - text.csv (should ALWAYS end with .csv!). Default: generated.csv
-                :rows_to_create: (int, not required) - 10, 100, 1000... Default: 1000
+                - :filename: (str, not required) - generated.csv (should ALWAYS end with .csv!)
+                - :rows_to_create: (int, not required) - 1000
         """
         self.csv_loader_service.load(**request.query_params)
         return Response("Database is filled", status=HTTP_200_OK)
