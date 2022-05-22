@@ -80,7 +80,7 @@ class CsvReader:
             entity_names[i]: []
             for i in range(len(entity_names))
         }
-        with open(f'../../{filename}', newline='\n') as csvfile:
+        with open(f'{filename}', newline='\n') as csvfile:
             reader = csv.reader(csvfile, delimiter=';', quotechar='|')
             current_entity = None
             current_header = None
