@@ -18,13 +18,16 @@ class CsvLoaderAPIView(APIView):
     CSV loader view set.
     """
 
-    def __init__(self, **kwargs):
-        super().__init__()
-        self.csv_loader_service = None
+    def __init__(self, csv_loader_service: CsvLoaderService = CsvLoaderService(), *args, **kwargs):
+        super(CsvLoaderAPIView, self).__init__(**kwargs)
+        self.csv_loader_service = csv_loader_service
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(CsvLoaderAPIView, self).dispatch(request, *args, **kwargs)
 
     @inject
-    def setup(self, request, csv_loader_service: CsvLoaderService, *args, **kwargs):
-        self.csv_loader_service = csv_loader_service
+    def setup(self, request, csv_loader_service: CsvLoaderService = CsvLoaderService(), *args, **kwargs):
+        super(CsvLoaderAPIView, self).setup(request, csv_loader_service, args, kwargs)
 
     @extend_schema(
         parameters=[
@@ -34,10 +37,20 @@ class CsvLoaderAPIView(APIView):
             OpenApiParameter(
                 "rows_to_create", OpenApiTypes.INT, OpenApiParameter.QUERY, required=False
             ),
+            OpenApiParameter(
+                "flush_db",
+                OpenApiTypes.BOOL, OpenApiParameter.QUERY,
+                required=False, default=False
+            ),
+            OpenApiParameter(
+                "regenerate_file_if_exists",
+                OpenApiTypes.BOOL, OpenApiParameter.QUERY,
+                required=False, default=False
+            )
         ],
         request=None,
         responses={
-            200: OpenApiResponse(response=HTTP_200_OK),
+            200: OpenApiResponse(response=HTTP_200_OK, description="Database is filled"),
             400: OpenApiResponse(description="Bad request"),
         },
     )
@@ -46,8 +59,14 @@ class CsvLoaderAPIView(APIView):
         Fills the database based on a generated CSV (also generates a CSV if it does not exist).
         ###
             Parameters:
-                - :filename: (str, not required) - generated.csv (should ALWAYS end with .csv!)
-                - :rows_to_create: (int, not required) - 1000
+                - :filename: (str,def=generated.csv)            - should ALWAYS end with .csv
+                - :rows_to_create: (int, def=1000)              - number of rows to create
+                - :flush_db: (bool, def=False)                  - should database tables be
+                                                                  truncated?
+                - :regenerate_file_if_exists: (bool, def=False) - if file exists, should it be
+                                                                  cleared first?
         """
         self.csv_loader_service.load(**request.query_params)
-        return Response("Database is filled", status=HTTP_200_OK)
+        return Response(
+            {"message": "Database is filled"}, status=HTTP_200_OK
+        )

@@ -3,6 +3,7 @@ from django.db import models
 
 from paypal.domain.core.models import BaseUUIDModel
 from paypal.domain.account.models import AccountPersonalData
+from paypal.domain.core.util import EntityVerbose
 
 
 class BillingAddress(BaseUUIDModel):
@@ -22,8 +23,8 @@ class BillingAddress(BaseUUIDModel):
     REQUIRED_FIELDS = ['account', 'street_address', 'center_of_population', 'region', 'zip_code']
 
     class Meta:
-        verbose_name = 'Billing Address'
-        verbose_name_plural = 'Billing Addresses'
+        verbose_name = EntityVerbose.BILLING_ADDRESS
+        verbose_name_plural = f'{EntityVerbose.BILLING_ADDRESS}es'
 
     def __str__(self) -> str:
         return (

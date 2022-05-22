@@ -3,6 +3,7 @@ from django.db import models
 from paypal.domain.core.models import BaseUUIDModel
 from paypal.domain.banking.models import Card
 from paypal.domain.banking.constants import TransactionConstants
+from paypal.domain.core.util import EntityVerbose
 
 
 class Transaction(BaseUUIDModel):
@@ -28,8 +29,8 @@ class Transaction(BaseUUIDModel):
     REQUIRED_FIELDS = ['from_card', 'to_card', 'type', 'payment_method', 'status']
 
     class Meta:
-        verbose_name = 'Transaction'
-        verbose_name_plural = 'Transactions'
+        verbose_name = EntityVerbose.TRANSACTION
+        verbose_name_plural = f'{EntityVerbose.TRANSACTION}s'
 
     def __str__(self) -> str:
         return f'{self.id} | {self.from_card} -> {self.to_card} {self.status}'

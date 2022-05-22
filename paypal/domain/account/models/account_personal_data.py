@@ -5,6 +5,7 @@ from django.core.validators import (
 from django.db import models
 
 from paypal.domain.account.models import PayPalAccount
+from paypal.domain.core.util import EntityVerbose
 
 
 class AccountPersonalData(models.Model):
@@ -27,8 +28,8 @@ class AccountPersonalData(models.Model):
     REQUIRED_FIELDS = ['account', 'email', 'password']
 
     class Meta:
-        verbose_name = 'Account Personal Data'
-        verbose_name_plural = 'Accounts Personal Data'
+        verbose_name = EntityVerbose.ACCOUNT_PERSONAL_DATA
+        verbose_name_plural = EntityVerbose.ACCOUNT_PERSONAL_DATA
 
     def __str__(self) -> str:
         return f'{self.account.id} | {self.full_name} {self.email}'
