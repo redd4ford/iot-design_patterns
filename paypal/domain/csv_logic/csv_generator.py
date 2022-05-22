@@ -5,13 +5,8 @@ import uuid
 
 from faker import Faker
 
-from paypal.domain.csv_logic.util import (
-    paypal_account_headers,
-    account_personal_data_headers,
-    billing_address_headers,
-    card_headers,
-    transaction_headers,
-)
+from paypal.domain.core.util import EntityVerbose
+from paypal.domain.csv_logic.util import CsvHeaders
 
 
 class CsvGenerator:
@@ -108,10 +103,11 @@ class CsvGenerator:
         """
         Generate CSV file with fake data.
         """
-        with open(f'../../{filename}', 'w', newline='\n') as csvfile:
+        with open(f'{filename}', 'w', newline='\n') as csvfile:
             writer = csv.writer(csvfile, delimiter=';')
+            print(f'Generating {filename}...')
 
-            writer.writerow(paypal_account_headers)
+            writer.writerow(CsvHeaders.paypal_account_headers)
 
             account_ids = []
             used_account_ids = set()
@@ -123,8 +119,10 @@ class CsvGenerator:
                     CsvGenerator._generate_paypal_account_data(new_id)
                 )
 
+            print(f'Generated {EntityVerbose.PAYPAL_ACCOUNT}s...')
+
             writer.writerow('\n')
-            writer.writerow(account_personal_data_headers)
+            writer.writerow(CsvHeaders.account_personal_data_headers)
 
             for i in range(0, rows_to_write // 5):
                 new_id = CsvGenerator._get_unique_account_id(account_ids, used_account_ids)
@@ -133,8 +131,10 @@ class CsvGenerator:
                     CsvGenerator._generate_account_personal_data(new_id)
                 )
 
+            print(f'Generated {EntityVerbose.ACCOUNT_PERSONAL_DATA}...')
+
             writer.writerow('\n')
-            writer.writerow(billing_address_headers)
+            writer.writerow(CsvHeaders.billing_address_headers)
 
             billing_address_ids = []
             for i in range(0, rows_to_write // 5):
@@ -144,8 +144,10 @@ class CsvGenerator:
                     CsvGenerator._generate_billing_address_data(new_id, account_ids)
                 )
 
+            print(f'Generated {EntityVerbose.BILLING_ADDRESS}es...')
+
             writer.writerow('\n')
-            writer.writerow(card_headers)
+            writer.writerow(CsvHeaders.card_headers)
 
             card_ids = []
             for i in range(0, rows_to_write // 5):
@@ -155,14 +157,17 @@ class CsvGenerator:
                     CsvGenerator._generate_card_data(new_id, account_ids, billing_address_ids)
                 )
 
+            print(f'Generated {EntityVerbose.CARD}s...')
+
             writer.writerow('\n')
-            writer.writerow(transaction_headers)
+            writer.writerow(CsvHeaders.transaction_headers)
 
             for i in range(0, rows_to_write // 5):
                 writer.writerow(
                     CsvGenerator._generate_transaction_data(card_ids)
                 )
 
+            print(f'Generated {EntityVerbose.TRANSACTION}s...')
             print(f'Generated a CSV with {rows_to_write} rows.')
 
 
