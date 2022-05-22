@@ -30,6 +30,9 @@ class AbstractRepository(ABC):
     def save(self, obj: BASE_CLASS, update_fields: Optional[list] = None) -> None:
         obj.save(update_fields=update_fields)
 
-    def delete_by_id(self, object_id: str):
+    def delete_by_id(self, object_id: str) -> None:
         obj = self.get_by_id(object_id)
-        return obj.delete()
+        obj.delete()
+
+    def delete_all(self) -> None:
+        self.get_all().delete()
