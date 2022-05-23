@@ -10,13 +10,14 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
-from paypal.services.csv_loader import CsvLoaderService
+from paypal.app_services import CsvLoaderService
 
 
 class CsvLoaderAPIView(APIView):
     """
     CSV loader view set.
     """
+    GROUP_TAG = ["api-csv"]
 
     def __init__(self, csv_loader_service: CsvLoaderService = CsvLoaderService(), *args, **kwargs):
         super(CsvLoaderAPIView, self).__init__(**kwargs)
@@ -32,20 +33,26 @@ class CsvLoaderAPIView(APIView):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                "filename", OpenApiTypes.STR, OpenApiParameter.QUERY, required=False
+                "filename", OpenApiTypes.STR, OpenApiParameter.QUERY,
+                required=False, default='generated.csv',
+                description="Filename, should ALWAYS end with .csv"
             ),
             OpenApiParameter(
-                "rows_to_create", OpenApiTypes.INT, OpenApiParameter.QUERY, required=False
+                "rows_to_create", OpenApiTypes.INT, OpenApiParameter.QUERY,
+                required=False, default=1000,
+                description="Number of rows to create"
             ),
             OpenApiParameter(
                 "flush_db",
                 OpenApiTypes.BOOL, OpenApiParameter.QUERY,
-                required=False, default=False
+                required=False, default=False,
+                description="Should the database tables be truncated?"
             ),
             OpenApiParameter(
                 "regenerate_file_if_exists",
                 OpenApiTypes.BOOL, OpenApiParameter.QUERY,
-                required=False, default=False
+                required=False, default=False,
+                description="If file with *filename* exists, should it be cleared first?"
             )
         ],
         request=None,
@@ -53,18 +60,11 @@ class CsvLoaderAPIView(APIView):
             200: OpenApiResponse(response=HTTP_200_OK, description="Database is filled"),
             400: OpenApiResponse(description="Bad request"),
         },
+        tags=GROUP_TAG
     )
     def post(self, request):
         """
         Fills the database based on a generated CSV (also generates a CSV if it does not exist).
-        ###
-            Parameters:
-                - :filename: (str,def=generated.csv)            - should ALWAYS end with .csv
-                - :rows_to_create: (int, def=1000)              - number of rows to create
-                - :flush_db: (bool, def=False)                  - should database tables be
-                                                                  truncated?
-                - :regenerate_file_if_exists: (bool, def=False) - if file exists, should it be
-                                                                  cleared first?
         """
         self.csv_loader_service.load(**request.query_params)
         return Response(

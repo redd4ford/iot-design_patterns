@@ -22,12 +22,11 @@ router = routers.SimpleRouter()
 
 # Accounts
 router.register(r"accounts", PayPalAccountViewSet, basename="accounts")
-personal_data_router = routers.NestedSimpleRouter(router, r"accounts", lookup="account")
-personal_data_router.register(r"details", AccountPersonalDataViewSet, basename="details")
+router.register(r"details", AccountPersonalDataViewSet, basename="details")
 
 # Banking
-router.register(r"cards", CardViewSet, basename="cards")
 router.register(r"billing-addresses", BillingAddressViewSet, basename="billing_addresses")
+router.register(r"cards", CardViewSet, basename="cards")
 router.register(r"transactions", TransactionViewSet, basename="transactions")
 
 # Url patterns
