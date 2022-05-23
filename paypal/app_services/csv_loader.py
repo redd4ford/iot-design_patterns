@@ -118,7 +118,8 @@ class CsvLoaderService:
 
         self.populate(parsed_data)
 
-    def populate(self, parsed_data: dict) -> None:
+    @classmethod
+    def populate(cls, parsed_data: dict) -> None:
         """
         Create entities and store them in the database.
         """
